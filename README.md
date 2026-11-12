@@ -1,6 +1,6 @@
 # Recolhe+
 
-PoC desenvolvida para a AEP de Engenharia de Software, alinhada ao **ODS 12 — Consumo e Produção Responsáveis**.
+PoC desenvolvida para a AEP de Engenharia de Software referente ao sexto semestre, alinhada ao **ODS 12 — Consumo e Produção Responsáveis**.
 
 A solução organiza alimentos excedentes e permite que instituições receptoras registrem solicitações com vários itens, facilitando o controle das doações e das entregas.
 
