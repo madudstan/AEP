@@ -211,7 +211,7 @@ Para executar os testes automatizados no Windows:
 .\mvnw.cmd test
 ```
 
-Para executar os testes e gerar o relatório de cobertura:
+Para executar os testes e gerar o relatório de cobertura é necessário o seguinte comando:
 
 ```powershell
 .\mvnw.cmd clean verify
