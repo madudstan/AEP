@@ -1,116 +1,174 @@
-# Sistema de Gestão e Redistribuição de Alimentos Excedentes
+# Recolhe+
 
-PoC desenvolvida para a AEP de Engenharia de Software, alinhada ao **ODS 12 — Consumo e Produção Responsáveis**. A solução organiza alimentos excedentes e permite que instituições receptoras registrem solicitações com vários itens.
+PoC desenvolvida para a AEP de Engenharia de Software, alinhada ao **ODS 12 — Consumo e Produção Responsáveis**.
+
+A solução organiza alimentos excedentes e permite que instituições receptoras registrem solicitações com vários itens, facilitando o controle das doações e das entregas.
+
+---
 
 ## Equipe
 
 Heloísa Sayuri Silva Saito (24062631-2), Maria Eduarda de Castro Lachimia (24055202-2) e Matheus Costa E Silva (2400729-2).
 
+---
+
 ## Evolução da Primeira para a Segunda Entrega
 
-A Primeira Entrega utilizava uma coleção `alimentos`, documentos simples e CRUD básico. Esta versão preserva esse fluxo e evolui a PoC com:
+A Primeira Entrega utilizava uma coleção `alimentos`, documentos simples e operações básicas de CRUD.
 
-- coleção `instituicoes`, com endereço embutido;
-- coleção `solicitacoes`, relacionada a uma instituição por `instituicaoId`;
-- lista de subdocumentos `itens` dentro de cada solicitação;
-- relacionamento de cada item com um alimento por `alimentoId`;
-- regras de negócio para instituição existente, alimento disponível e unidade compatível;
-- alteração de status da solicitação;
-- testes unitários, HTTP e de integração com Testcontainers;
-- documentação técnica e evidência de cobertura com JaCoCo.
+Na Segunda Entrega, a solução foi evoluída com:
 
-## Tecnologias Utilizadas
+- Coleção `instituicoes`, com endereço embutido;
+- Coleção `solicitacoes`, relacionada a uma instituição por `instituicaoId`;
+- Lista de subdocumentos `itens` dentro de cada solicitação;
+- Relacionamento de cada item com um alimento por `alimentoId`;
+- Regras de negócio para verificar instituição existente;
+- Verificação de alimento disponível;
+- Verificação de unidade compatível;
+- Alteração do status das solicitações;
+- Edição e exclusão de alimentos e instituições;
+- Front-end para utilização da aplicação;
+- Testes unitários, HTTP e de integração;
+- Documentação técnica;
+- Relatório de cobertura com JaCoCo.
+
+---
+
+# Tecnologias Utilizadas
+
+## Linguagens de programação
 
 - Java 21;
-- Maven Wrapper;
-- JaCoco;
+- JavaScript.
+
+## Estrutura e bibliotecas
+
 - Spring Boot 3.5.16;
 - Spring Web;
 - Spring Data MongoDB;
 - Jakarta Validation;
 - Springdoc OpenAPI;
-- Testcontainers;
-- Docker e Docker Compose;
+- React;
+- Vite;
 - JUnit 5;
-- Mockito e MockMvc.
+- Mockito;
+- MockMvc;
+- Testcontainers;
+- JaCoCo.
 
-## Arquitetura
+## Banco de dados
 
-A aplicação mantém separação por responsabilidades:
+- MongoDB;
+- Docker;
+- Docker Compose.
+
+## Projeto e versionamento
+
+- Apache Maven;
+- Maven Wrapper;
+- Git;
+- GitHub.
+
+---
+
+# Arquitetura
+
+A aplicação foi organizada em camadas, com responsabilidades separadas:
 
 ```text
 JSON -> Controller -> Request DTO -> Service -> Repository -> MongoDB
 MongoDB -> Model -> Service -> Mapper -> Response DTO -> JSON
 ```
 
-As camadas são `controller`, `dto`, `service`, `repository`, `model`, `mapper` e `exception`. Consulte `docs/architecture.md` para o fluxo completo.
+As principais camadas são:
 
-## Modelagem NoSQL
+- `controller`: recebe as requisições HTTP;
+- `dto`: define os dados de entrada e saída;
+- `service`: concentra as regras de negócio;
+- `repository`: realiza o acesso ao MongoDB;
+- `model`: representa os documentos armazenados;
+- `mapper`: converte modelos em DTOs e DTOs em modelos;
+- `exception`: trata os erros da aplicação.
 
-O MongoDB possui três coleções:
+---
 
-- `alimentos`: excedentes cadastrados, mantendo o CRUD da Primeira Entrega;
-- `instituicoes`: instituições receptoras com o documento embutido `endereco`;
-- `solicitacoes`: pedidos relacionados a uma instituição e contendo a lista aninhada `itens`.
+# Modelagem NoSQL
 
-Exemplo resumido de solicitação:
+O MongoDB possui três coleções principais:
+
+- `alimentos`: alimentos excedentes cadastrados;
+- `instituicoes`: instituições com endereço embutido;
+- `solicitacoes`: solicitações relacionadas a instituições e contendo uma lista de itens.
+
+Exemplo resumido de uma solicitação:
 
 ```json
 {
   "instituicaoId": "instituicao-1",
   "status": "PENDENTE",
   "itens": [
-    { "alimentoId": "alimento-1", "quantidadeSolicitada": 10, "unidade": "kg" }
+    {
+      "alimentoId": "alimento-1",
+      "quantidadeSolicitada": 10,
+      "unidade": "kg"
+    }
   ]
 }
 ```
 
-## Pré-requisitos
+---
+
+# Pré-requisitos
+
+Para executar o projeto, é necessário ter instalado:
 
 - JDK 21;
-- Docker e Docker Compose;
+- Docker Desktop;
+- Docker Compose;
 - Git;
-- IDE compatível, opcionalmente IntelliJ IDEA.
+- IntelliJ IDEA ou outra IDE compatível.
 
-## Execução local
+---
 
-Na pasta `AepMongoJava2026-main`, inicie o MongoDB:
+# Execução
 
-```bash
+Primeiro, abra o Docker Desktop e a IDE de sua preferência, como o IntelliJ IDEA.  Depois, abra o projeto na pasta principal, aquela que contém o arquivo: ```compose.yaml ```
+
+No terminal da IDE, execute:
+
+```powershell
 docker compose up -d
 ```
 
-A aplicação usa por padrão `mongodb://root:Mongo@localhost:27018/alimentos?authSource=admin`, conforme `compose.yaml`. Para outra instalação, defina a variável `MONGODB_URI`.
+Esse comando inicia o MongoDB e o Mongo Express em containers. Depois que o container estiver em execução, abra o MongoDB Compass e conecte-se utilizando:
 
-Execute a aplicação:
-
-```bash
-./mvnw spring-boot:run
+```text
+mongodb://root:Mongo@localhost:27018/alimentos?authSource=admin
 ```
 
-No Windows:
+A aplicação utiliza essa conexão por padrão, conforme definido no arquivo `compose.yaml`.  Em seguida, no IntelliJ IDEA, execute a classe principal:
 
-```powershell
-mvnw.cmd spring-boot:run
+```text
+AlimentosExcedentesApplication
 ```
 
-A API fica em `http://localhost:8080` e a documentação Swagger em `http://localhost:8080/docs`.
+Após a inicialização, a aplicação ficará disponível em:
 
-### Front-end Recolhe+
+```text
+http://localhost:8080
+```
 
-O front-end funcional está incorporado aos recursos do próprio Spring Boot. Portanto, para usar o sistema normalmente, não é necessário iniciar Node, Vite ou outro terminal.
+A documentação da API pelo Swagger está disponível em:
 
-O fluxo simples é:
+```text
+http://localhost:8080/docs
+```
 
-1. abrir o Docker Desktop e iniciar o container do MongoDB;
-2. executar `AlimentosExcedentesApplication` pelo botão **Run** do IntelliJ;
-3. abrir `http://localhost:8080`.
+---
 
-O Swagger continua disponível em `http://localhost:8080/docs`. A pasta `frontend/` permanece no projeto para futuras alterações visuais; nesse caso, depois de alterar o front-end, gere um novo build com `npm install` e `npm run build` e copie o conteúdo de `frontend/dist/` para `src/main/resources/static/`.
+# Principais endpoints
 
-## Principais endpoints
-
-### Alimentos
+## Alimentos
 
 ```text
 POST   /api/alimentos
@@ -120,7 +178,7 @@ PUT    /api/alimentos/{id}
 DELETE /api/alimentos/{id}
 ```
 
-### Instituições
+## Instituições
 
 ```text
 POST   /api/instituicoes
@@ -130,7 +188,7 @@ PUT    /api/instituicoes/{id}
 DELETE /api/instituicoes/{id}
 ```
 
-### Solicitações
+## Solicitações
 
 ```text
 POST   /api/solicitacoes
@@ -141,34 +199,48 @@ PATCH  /api/solicitacoes/{id}/status
 DELETE /api/solicitacoes/{id}
 ```
 
-O fluxo recomendado para a demonstração é: cadastrar alimento, cadastrar instituição com endereço, criar solicitação com um ou mais itens e atualizar o status para `APROVADA` ou `ATENDIDA`.
+---
 
-## Testes e cobertura
+# Testes e cobertura
 
-Execute os testes unitários e de controller:
+### A cobertura geral obtida ficou em aproximadamente: 89%
 
-```bash
-./mvnw test
+Para executar os testes automatizados no Windows:
+
+```powershell
+.\mvnw.cmd test
 ```
 
-Para executar também a verificação de cobertura e os testes de integração com MongoDB em Testcontainers:
+Para executar os testes e gerar o relatório de cobertura:
 
-```bash
-./mvnw clean verify
+```powershell
+.\mvnw.cmd clean verify
 ```
 
-O JaCoCo gera o relatório em `target/site/jacoco/index.html` e bloqueia o build quando a cobertura de linhas fica abaixo de 70%. Na validação local desta versão, foram executados 31 testes unitários/HTTP, com cobertura de linhas de 85,45%. Os testes de integração exigem Docker ativo e devem ser executados no ambiente final com `./mvnw clean verify`.
+O JaCoCo gera o relatório em:
 
-## Documentação e evidências
+```text
+target/site/jacoco/index.html
+```
+---
 
-- `docs/architecture.md`: arquitetura e responsabilidades;
-- `docs/database.md`: coleções, documentos e relacionamentos;
-- `docs/http-api.md`: contratos HTTP e exemplos;
-- `docs/decisions.md`: decisões técnicas da evolução;
-- `docs/kanban.md`: quadro de tarefas e evidências de metodologia;
-- `docs/demo-roteiro.md`: roteiro do vídeo de 3 a 5 minutos;
-- `docs/versionamento.md`: identificação da versão final no GitHub.
+# Documentação
 
-## ODS 12
+A pasta `docs/` contém os documentos complementares do projeto:
 
-O sistema contribui para o consumo e a produção responsáveis ao organizar excedentes que ainda podem ser aproveitados e facilitar sua solicitação por instituições receptoras, reduzindo a chance de descarte.
+- `architecture.md`: arquitetura e responsabilidades;
+- `database.md`: coleções, documentos e relacionamentos;
+- `http-api.md`: endpoints e contratos da API;
+- `decisions.md`: decisões técnicas da evolução;
+- `kanban.md`: quadro de tarefas da equipe;
+- `demo-roteiro.md`: roteiro de demonstração;
+- `versionamento.md`: informações sobre a versão do projeto;
+- `roteiro-video-segunda-entrega.md`: roteiro do vídeo da Segunda Entrega.
+
+---
+
+# ODS 12
+
+O projeto está relacionado ao **ODS 12 — Consumo e Produção Responsáveis**.
+
+A aplicação contribui para esse objetivo ao organizar alimentos excedentes que ainda podem ser aproveitados e facilitar sua redistribuição para instituições e pessoas atendidas, reduzindo o desperdício de alimentos.
