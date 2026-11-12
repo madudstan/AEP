@@ -41,4 +41,5 @@ public class Alimento {
     public void setOrigem(String origem) { this.origem = origem; }
     public StatusAlimento getStatus() { return status; }
     public void setStatus(StatusAlimento status) { this.status = status; }
+
 }
