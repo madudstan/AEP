@@ -30,7 +30,7 @@ Na Segunda Entrega, a solução foi evoluída com:
 - Front-end para utilização da aplicação;
 - Testes unitários, HTTP e de integração;
 - Documentação técnica;
-- Relatório de cobertura com JaCoCo.
+- Relatório de cobertura com JaCoCo
 
 ---
 
